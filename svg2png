@@ -1,0 +1,23 @@
+#!/bin/bash
+export TTY
+
+( hs "$(basename "$0")" "$@" "#" "<==" "$(ps -o comm= $PPID)" 0</dev/null ) &>/dev/null
+
+fp="$1"
+test -f "$fp" || exit 1
+
+rp="$(realpath "$fp")"
+
+fn=$(basename "$fp")
+dn=$(dirname "$rp")
+
+# echo "$dn"
+
+ext="${fn##*.}"
+mant="${fn%.*}"
+
+cd "$dn"
+
+svg2png.js "$rp" "$dn"
+
+echo "$dn/${mant}.png"
